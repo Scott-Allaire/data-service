@@ -5,7 +5,7 @@ Stores data from IoT devices
 Clone the project
 ```
 git clone <path to chores>
-cd device-service 
+cd data-service 
 ```
 ## Server
 Get the dependencies and start the server
@@ -13,6 +13,3 @@ Get the dependencies and start the server
 npm i
 npm start
 ```
-
-## Web Client
-Coming soon...
