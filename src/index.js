@@ -1,26 +1,28 @@
 
-var express = require('express');
-var bodyParser = require('body-parser');
+import http from 'http';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import config from './config.json';
+
 var morgan = require('morgan');
 var mongodb = require('mongodb');
 var _ = require('lodash');
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.server = http.createServer(app);
+
+app.use(bodyParser.json({
+    limit : config.bodyLimit
+}));
 
 // log requests to the console
 app.use(morgan('dev'));
 
 // CORS middleware
-var allowCrossDomain = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-  next();
-}
-app.use(allowCrossDomain);
+app.use(cors({
+    exposedHeaders: config.corsHeaders
+}));
 
 // list data from a collection
 app.get('/data/:collection', function (req, res) {
@@ -92,8 +94,9 @@ mongodb.MongoClient.connect(url, function(err, db) {
   } else {
     app.set('mongo', db);
 
-    var server = app.listen(app.get('port'), function () {
-      console.log('Data service listening on port ' + server.address().port);
-    });
+    app.server.listen(process.env.PORT || config.port);
+    console.log(`Data service listening on port ${app.server.address().port}`);
   }
 });
+
+export default app;
