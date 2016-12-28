@@ -1,13 +1,13 @@
 
-import http from 'http';
-import express from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
-import config from './config.json';
+import cors from 'cors';
+import express from 'express';
+import http from 'http';
+import morgan from 'morgan';
+import mongodb from 'mongodb';
+import _ from 'lodash';
 
-var morgan = require('morgan');
-var mongodb = require('mongodb');
-var _ = require('lodash');
+import config from './config.json';
 
 var app = express();
 app.server = http.createServer(app);
@@ -26,14 +26,14 @@ app.use(cors({
 
 // list data from a collection
 app.get('/data/:collection', function (req, res) {
-  var collection = req.params.collection;
-  var page = req.param('page') || 0;
-  var pageSize = req.param('size') || 20;
-  console.log('GET', collection);
+  let collectionName = req.params.collection;
+  let page = req.param('page') || 0;
+  let pageSize = req.param('size') || 20;
+  console.log('GET', collectionName);
 
   var db = app.get('mongo');
 
-  var collection = db.collection(collection);
+  var collection = db.collection(collectionName);
   collection.find({})
       .sort({created: -1})
       .skip(parseInt(page) * parseInt(pageSize))
@@ -51,12 +51,12 @@ app.get('/data/:collection', function (req, res) {
 
 // store data in a collection
 app.post('/data/:collection', function (req, res) {
-  var collection = req.params.collection;
-  console.log('POST', collection, req.body);
+  var collectionName = req.params.collection;
+  console.log('POST', collectionName, req.body);
 
   var db = app.get('mongo');
 
-  var collection = db.collection(collection);
+  var collection = db.collection(collectionName);
 
   if (_.isArray(req.body)) {
     _.each(req.body, function(doc) {
@@ -85,7 +85,7 @@ app.post('/data/:collection', function (req, res) {
   }
 });
 
-app.set('port', process.env.PORT || 5000);
+let port = process.env.PORT || config.port || 8080;
 
 var url = 'mongodb://localhost:27017/data';
 mongodb.MongoClient.connect(url, function(err, db) {
@@ -94,8 +94,8 @@ mongodb.MongoClient.connect(url, function(err, db) {
   } else {
     app.set('mongo', db);
 
-    app.server.listen(process.env.PORT || config.port);
-    console.log(`Data service listening on port ${app.server.address().port}`);
+    app.server.listen(port);
+    console.log(`Data service listening on port ${port}`);
   }
 });
 
