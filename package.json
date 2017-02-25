@@ -28,15 +28,20 @@
     }
   },
   "dependencies": {
-    "Q": "0.0.1",
-    "body-parser": "^1.15.2",
+    "body-parser": "~1.16.0",
     "compression": "^1.5.2",
+    "cookie-parser": "~1.4.3",
     "cors": "^2.7.1",
-    "express": "^4.14.0",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "jade": "~1.11.0",
     "lodash": "^4.17.2",
+    "md5": "^2.2.1",
     "mongodb": "^2.2.12",
-    "morgan": "^1.7.0",
-    "resource-router-middleware": "^0.5.1"
+    "morgan": "~1.7.0",
+    "resource-router-middleware": "^0.5.1",
+    "serve-favicon": "~2.3.2",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

@@ -1,5 +1,5 @@
 {
   "port": 8080,
-  "bodyLimit": "1024kb",
-  "corsHeaders": ["Link"]
+  "corsHeaders": ["Link"],
+  "mongoUrl": "mongodb://glados:27017/data"
 }
